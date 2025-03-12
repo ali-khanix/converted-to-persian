@@ -42,6 +42,10 @@ export default buildConfig({
     payloadCloudPlugin(),
     seoPlugin({
       collections: ['products', 'pages'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }) => doc.title,
+      generateDescription: ({ doc }) => doc.description,
+      generateImage: ({ doc }) => doc.image,
     }),
   ],
   i18n: {

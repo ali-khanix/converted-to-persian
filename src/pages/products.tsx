@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import Head from 'next/head'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 import { useEffect, useState } from 'react'
 import { getProducts } from '@/utils/api'
@@ -23,24 +23,21 @@ const ProductsPage = ({ product }: { product: Product }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const data = await getProducts()
-      setProducts(data)
-      setLoading(false)
-    }
-    fetchProducts()
+    setTimeout(() => {
+      const fetchProducts = async () => {
+        const data = await getProducts()
+        setProducts(data)
+        setLoading(false)
+      }
+      fetchProducts()
+    }, 5000)
   }, [])
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <LoadingSpinner />
   if (products.length === 0) return <p>No products found</p>
 
   return (
     <Layout>
-      <Head>
-        <title>{product.title} | My Store</title>
-        <meta name="description" content={product.description} />
-        <meta property="og:image" content={product.images?.url} />
-      </Head>
       <div className="bg-gray-50 p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((product) => (
           <div
@@ -48,7 +45,6 @@ const ProductsPage = ({ product }: { product: Product }) => {
             className="bg-white 
           border-2 border-gray-900 p-5 shadow rounded-md"
           >
-            <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
             {product.images?.url ? (
               <Image
                 src={product.images.url}
@@ -63,7 +59,8 @@ const ProductsPage = ({ product }: { product: Product }) => {
                 <p className="text-gray-500">No image available</p>
               </div>
             )}
-            <p className="text-gray-600">Price: ${product.price}</p>
+            <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+            <p className="text-gray-600">قیمت: {product.price.toLocaleString('fa-IR')} تومان</p>
             <p className="text-gray-500">{product.description}</p>
           </div>
         ))}
@@ -73,8 +70,28 @@ const ProductsPage = ({ product }: { product: Product }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { data } = await getProducts()
-  return { props: { product: data } }
+  try {
+    const response = await getProducts()
+    let product = response.data
+
+    // If product is undefined, set it to null.
+    if (!product) {
+      product = null
+    }
+
+    // Alternatively, for each property that might be undefined, set a default:
+    if (product) {
+      product.title = product.title ?? ''
+      product.description = product.description ?? ''
+      product.image = product.image ?? null
+      // ...do this for any property that might be undefined
+    }
+
+    return { props: { product } }
+  } catch (error) {
+    console.error('Error fetching product:', error)
+    return { props: { product: null } }
+  }
 }
 
 export default ProductsPage

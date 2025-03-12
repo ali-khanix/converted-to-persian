@@ -1,6 +1,10 @@
 import { CollectionConfig } from 'payload'
 
 export const Orders: CollectionConfig = {
+  labels: {
+    singular: 'سفارش',
+    plural: 'سفارش‌ها',
+  },
   slug: 'orders',
   admin: {
     useAsTitle: 'id',
