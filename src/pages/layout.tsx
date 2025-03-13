@@ -6,7 +6,7 @@ import { iranYekan } from '@/app/fonts/fonts'
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className={`${iranYekan.variable} font-iranYekan dir-rtl`}>
-      <main>
+      <main className="relative">
         <Navbar />
         {children} {/* This renders the content of individual pages */}
       </main>

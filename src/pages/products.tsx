@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import LoadingSpinner from '@/components/LoadingSpinner'
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner'
 
 import { useEffect, useState } from 'react'
 import { getProducts } from '@/utils/api'
@@ -18,7 +18,7 @@ interface Product {
   }
 }
 
-const ProductsPage = ({ product }: { product: Product }) => {
+const ProductsPage = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -30,7 +30,7 @@ const ProductsPage = ({ product }: { product: Product }) => {
         setLoading(false)
       }
       fetchProducts()
-    }, 5000)
+    }, 2000)
   }, [])
 
   if (loading) return <LoadingSpinner />
@@ -69,7 +69,7 @@ const ProductsPage = ({ product }: { product: Product }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({}) => {
   try {
     const response = await getProducts()
     let product = response.data
