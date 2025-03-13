@@ -43,7 +43,7 @@ export default buildConfig({
     seoPlugin({
       collections: ['products', 'pages'],
       uploadsCollection: 'media',
-      generateTitle: ({ doc }) => doc.title,
+      generateTitle: ({ doc }) => doc.name,
       generateDescription: ({ doc }) => doc.description,
       generateImage: ({ doc }) => doc.image,
     }),
